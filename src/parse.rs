@@ -21,12 +21,17 @@ pub fn start_arguments(arguments: &[&str]) -> StartArguments {
 
 #[test]
 fn parse_start_arguments_with_duration_value() {
-    let x = vec!["-d", "30"];
-    let result = start_arguments(&x);
+    let assertions = vec![
+        ("5", StartArguments { duration_min: 5 }),
+        ("10", StartArguments { duration_min: 10 }),
+        ("15", StartArguments { duration_min: 15 }),
+        ("30", StartArguments { duration_min: 30 }),
+    ];
 
-    let exp = StartArguments { duration_min: 30 };
-
-    assert_eq!(result, exp);
+    for assertion in assertions {
+        let result = start_arguments(&["-d", assertion.0]);
+        assert_eq!(result, assertion.1);
+    }
 }
 
 #[test]
