@@ -1,18 +1,29 @@
-use std::{env, path::PathBuf};
+use std::path::PathBuf;
 
-pub fn dir_path() -> PathBuf {
-    #[allow(deprecated)]
-    build_config_path(&env::home_dir().unwrap())
+pub struct Config {
+    pub base_dir_path: PathBuf,
+    pub time_entry_path: PathBuf,
+    pub finished_path: PathBuf,
 }
 
-fn build_config_path(base_path: &PathBuf) -> PathBuf {
-    [base_path, &PathBuf::from(".config/timer-cli")]
-        .iter()
-        .collect()
-}
+impl Config {
+    pub fn new(base_path: PathBuf) -> Config {
+        let base_dir_path: PathBuf = [base_path, PathBuf::from(".config/timer-cli")]
+            .iter()
+            .collect();
 
-#[test]
-fn build_finished_path_() {
-    let result = build_config_path(&PathBuf::from("/home/notation"));
-    assert_eq!(result, PathBuf::from("/home/notation/.config/timer-cli"));
+        let time_entry_path: PathBuf = [&base_dir_path, &PathBuf::from("time_entry")]
+            .iter()
+            .collect();
+
+        let finished_path: PathBuf = [&base_dir_path, &PathBuf::from("finished")]
+            .iter()
+            .collect();
+
+        Config {
+            base_dir_path,
+            time_entry_path,
+            finished_path,
+        }
+    }
 }
