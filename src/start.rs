@@ -1,39 +1,63 @@
 use crate::daemon::daemonize;
-use std::path::PathBuf;
+use crate::time_entry::UnixEpoch;
+use std::io::Write;
+use std::path::{Path, PathBuf};
 use std::process::Command;
-use std::time::Duration;
-use std::{env, thread};
+use std::time::{Duration, SystemTime};
+use std::{fs, thread};
 
-pub fn timer(duration_min: u32) {
+pub fn timer(duration_min: u32, config_dir_path: &PathBuf) {
+    let time_entries_path = [&config_dir_path, &PathBuf::from("time_entries.txt")]
+        .iter()
+        .collect::<PathBuf>();
+
+    if Path::new(&time_entries_path).exists() {
+        println!("Could not start timer, timer is already running.");
+        return;
+    }
+
     println!("Starting timer, the duration is: {} min(s).", duration_min);
+
+    let duration = duration_from_min(duration_min);
+    let end_time_unix_epoch = SystemTime::now().unix_epoch() + duration.as_secs();
+
+    let mut write_file = fs::OpenOptions::new()
+        .create(true)
+        .write(true)
+        .truncate(true)
+        .open(&time_entries_path)
+        .unwrap();
+
+    write_file
+        .write_all(end_time_unix_epoch.to_string().as_bytes())
+        .unwrap();
 
     daemonize().unwrap();
 
-    thread::sleep(duration_from_min(duration_min));
+    thread::sleep(duration);
 
-    #[allow(deprecated)]
-    let path = build_config_path(env::home_dir().unwrap());
+    if Path::new(&time_entries_path).exists() {
+        let time_entry_unix_epoch = fs::read_to_string(&time_entries_path)
+            .unwrap()
+            .parse::<u64>()
+            .unwrap();
 
-    Command::new("./finished")
-        .current_dir(path)
-        .output()
-        .unwrap();
-}
+        if time_entry_unix_epoch == end_time_unix_epoch {
+            Command::new("./finished")
+                .current_dir(config_dir_path)
+                .output()
+                .unwrap();
 
-fn build_config_path(home_path: PathBuf) -> PathBuf {
-    [home_path, PathBuf::from(".config/timer-cli")]
-        .iter()
-        .collect()
+            match fs::remove_file(&time_entries_path) {
+                // We don't care if it fails, because then it has been removed.
+                _ => {}
+            };
+        }
+    }
 }
 
 fn duration_from_min(duration_min: u32) -> Duration {
     Duration::from_secs((duration_min * 60).into())
-}
-
-#[test]
-fn build_finished_path_() {
-    let result = build_config_path(PathBuf::from("/home/notation"));
-    assert_eq!(result, PathBuf::from("/home/notation/.config/timer-cli"));
 }
 
 #[test]
