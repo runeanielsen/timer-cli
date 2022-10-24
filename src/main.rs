@@ -3,6 +3,7 @@
 use crate::config::Config;
 use std::env;
 
+mod cancel;
 mod config;
 mod daemon;
 mod parse;
@@ -29,5 +30,7 @@ fn main() {
             parse::start_arguments(&args.iter().map(<_>::as_ref).collect::<Vec<_>>()[2..]);
 
         start::timer(start_args.duration_min, &config);
+    } else if subcommand == "cancel" {
+        cancel::cancel(&config);
     }
 }

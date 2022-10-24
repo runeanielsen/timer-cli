@@ -12,7 +12,7 @@ unsafe fn _daemonize() -> Result<(), &'static str> {
     }
 
     if std::env::set_current_dir("/").is_err() {
-        return Err("Could not set current directory.")
+        return Err("Could not set current directory.");
     };
 
     libc::close(libc::STDIN_FILENO);
