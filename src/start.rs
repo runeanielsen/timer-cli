@@ -42,10 +42,8 @@ pub fn timer(duration_min: u32, config: &Config) {
         if time_entry_unix_epoch == end_time_unix_epoch {
             Command::new(&config.finished_path).output().unwrap();
 
-            match fs::remove_file(&config.time_entry_path) {
-                // We don't care if it fails, because then it has been removed.
-                _ => {}
-            };
+            // We don't care if it fails, because then it has been removed.
+            fs::remove_file(&config.time_entry_path).ok();
         }
     }
 }
