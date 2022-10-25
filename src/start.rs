@@ -15,8 +15,8 @@ pub fn start(duration_min: u32, config: &Config) {
 
     println!("Starting timer, the duration is: {} min(s).", duration_min);
 
-    let duration = duration_from_min(duration_min);
-    let end_time_unix_epoch = SystemTime::now().unix_epoch() + duration.as_secs();
+    let timer_duration = duration_from_min(duration_min);
+    let end_time_unix_epoch = SystemTime::now().unix_epoch() + timer_duration.as_secs();
 
     let mut write_file = fs::OpenOptions::new()
         .create(true)
@@ -31,7 +31,7 @@ pub fn start(duration_min: u32, config: &Config) {
 
     daemonize().unwrap();
 
-    thread::sleep(duration);
+    thread::sleep(timer_duration);
 
     if Path::new(&config.time_entry_path).exists() {
         let time_entry_unix_epoch = fs::read_to_string(&config.time_entry_path)
