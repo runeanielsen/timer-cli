@@ -1,13 +1,13 @@
 use crate::config::Config;
 use crate::daemon::daemonize;
-use crate::time_entry::UnixEpoch;
+use crate::unix_epoch::UnixEpoch;
 use std::io::Write;
 use std::path::Path;
 use std::process::Command;
 use std::time::{Duration, SystemTime};
 use std::{fs, thread};
 
-pub fn timer(duration_min: u32, config: &Config) {
+pub fn start(duration_min: u32, config: &Config) {
     if Path::new(&config.time_entry_path).exists() {
         println!("Could not start timer, timer is already running.");
         return;

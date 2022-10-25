@@ -8,7 +8,8 @@ mod config;
 mod daemon;
 mod parse;
 mod start;
-mod time_entry;
+mod status;
+mod unix_epoch;
 
 fn main() {
     let args = env::args().collect::<Vec<_>>();
@@ -29,8 +30,10 @@ fn main() {
         let start_args =
             parse::start_arguments(&args.iter().map(<_>::as_ref).collect::<Vec<_>>()[2..]);
 
-        start::timer(start_args.duration_min, &config);
+        start::start(start_args.duration_min, &config);
     } else if subcommand == "cancel" {
         cancel::cancel(&config);
+    } else if subcommand == "status" {
+        status::status(&config);
     }
 }
