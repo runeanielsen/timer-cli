@@ -17,9 +17,15 @@ pub fn status(config: &Config) {
 
     let now_unix_epoch = SystemTime::now().unix_epoch();
 
-    let difference = end_unix_epoch - now_unix_epoch;
-
-    println!("{}", format_status(difference));
+    // After a while has been deleted, it might still have been loaded in memory here
+    // to avoid values being displayed is invalid, we make sure that the 'end_unix_epoch'
+    // is greater than the 'now_unix_epoch' that way we only display valid values.
+    if end_unix_epoch > now_unix_epoch {
+        let difference = end_unix_epoch - now_unix_epoch;
+        println!("{}", format_status(difference));
+    } else {
+        println!("00:00");
+    }
 }
 
 fn format_status(secs: u64) -> String {
