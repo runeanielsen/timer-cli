@@ -5,3 +5,9 @@ Simple timer command-line interface, that creates a timer that is detached from 
 ## Platform
 
 This is not cross-platform, only works on Linux since it depends on libc fork to daemonize.
+
+## Installation
+
+```sh
+cargo build --release && cargo install --path .
+```
