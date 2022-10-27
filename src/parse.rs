@@ -1,11 +1,12 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, path::PathBuf};
 
 #[derive(Debug, Eq, PartialEq)]
-pub struct StartArguments {
+pub struct CommandArguments {
     pub duration_min: u32,
+    pub finished_script: Option<PathBuf>,
 }
 
-pub fn start_arguments(arguments: &[&str]) -> StartArguments {
+pub fn start_arguments(arguments: &[&str]) -> CommandArguments {
     let mut hm: HashMap<String, String> = HashMap::new();
     arguments.chunks_exact(2).for_each(|x| {
         hm.insert(x[0].to_string(), x[1].to_string());
@@ -16,16 +17,72 @@ pub fn start_arguments(arguments: &[&str]) -> StartArguments {
         None => 25,
     };
 
-    StartArguments { duration_min }
+    let finished_script: Option<PathBuf> = match hm.get("-f") {
+        Some(f) => Some(PathBuf::from(f.clone())),
+        None => None,
+    };
+
+    CommandArguments {
+        duration_min,
+        finished_script,
+    }
 }
 
 #[test]
-fn parse_start_arguments_with_duration_value() {
+fn parse_finished_script_argument() {
     let assertions = vec![
-        ("5", StartArguments { duration_min: 5 }),
-        ("10", StartArguments { duration_min: 10 }),
-        ("15", StartArguments { duration_min: 15 }),
-        ("30", StartArguments { duration_min: 30 }),
+        (
+            ["-f", "/home/my_awesome_finish_script"],
+            CommandArguments {
+                duration_min: 25,
+                finished_script: Some(PathBuf::from("/home/my_awesome_finish_script")),
+            },
+        ),
+        (
+            ["-f", "/home/finish_script.sh"],
+            CommandArguments {
+                duration_min: 25,
+                finished_script: Some(PathBuf::from("/home/finish_script.sh")),
+            },
+        ),
+    ];
+
+    for assertion in assertions {
+        assert_eq!(start_arguments(&assertion.0), assertion.1);
+    }
+}
+
+#[test]
+fn parse_arguments_with_flag_set() {
+    let assertions = vec![
+        (
+            "5",
+            CommandArguments {
+                duration_min: 5,
+                finished_script: None,
+            },
+        ),
+        (
+            "10",
+            CommandArguments {
+                duration_min: 10,
+                finished_script: None,
+            },
+        ),
+        (
+            "15",
+            CommandArguments {
+                duration_min: 15,
+                finished_script: None,
+            },
+        ),
+        (
+            "30",
+            CommandArguments {
+                duration_min: 30,
+                finished_script: None,
+            },
+        ),
     ];
 
     for assertion in assertions {
@@ -36,20 +93,35 @@ fn parse_start_arguments_with_duration_value() {
 
 #[test]
 fn parse_start_arguments_with_no_duration_value_should_be_default() {
-    assert_eq!(start_arguments(&[]), StartArguments { duration_min: 25 });
+    assert_eq!(
+        start_arguments(&[]),
+        CommandArguments {
+            duration_min: 25,
+            finished_script: None
+        }
+    );
 
     assert_eq!(
         start_arguments(&["-d"]),
-        StartArguments { duration_min: 25 }
+        CommandArguments {
+            duration_min: 25,
+            finished_script: None
+        }
     );
 
     assert_eq!(
         start_arguments(&["25"]),
-        StartArguments { duration_min: 25 }
+        CommandArguments {
+            duration_min: 25,
+            finished_script: None
+        }
     );
 
     assert_eq!(
         start_arguments(&["25", "-d"]),
-        StartArguments { duration_min: 25 }
+        CommandArguments {
+            duration_min: 25,
+            finished_script: None
+        }
     );
 }

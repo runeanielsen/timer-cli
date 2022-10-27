@@ -1,16 +1,18 @@
 use crate::unix_epoch::UnixEpoch;
 
-use std::{fs, path::Path, time::SystemTime};
+use std::{
+    fs,
+    path::{Path, PathBuf},
+    time::SystemTime,
+};
 
-use crate::config::Config;
-
-pub fn status(config: &Config) {
-    if !Path::new(&config.time_entry_path).exists() {
+pub fn status(time_entry_path: &PathBuf) {
+    if !Path::new(time_entry_path).exists() {
         println!("00:00");
         return;
     }
 
-    let end_unix_epoch: u64 = fs::read_to_string(&config.time_entry_path)
+    let end_unix_epoch: u64 = fs::read_to_string(time_entry_path)
         .unwrap()
         .parse()
         .unwrap();

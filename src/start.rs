@@ -1,14 +1,13 @@
-use crate::config::Config;
 use crate::daemon::daemonize;
 use crate::unix_epoch::UnixEpoch;
 use std::io::Write;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::{Duration, SystemTime};
 use std::{fs, thread};
 
-pub fn start(duration_min: u32, config: &Config) {
-    if Path::new(&config.time_entry_path).exists() {
+pub fn start(duration_min: u32, time_entry_path: &PathBuf, finished_script_path: &PathBuf) {
+    if Path::new(time_entry_path).exists() {
         eprintln!("Could not start timer, timer is already running.");
         return;
     }
@@ -22,7 +21,7 @@ pub fn start(duration_min: u32, config: &Config) {
         .create(true)
         .write(true)
         .truncate(true)
-        .open(&config.time_entry_path)
+        .open(time_entry_path)
         .unwrap();
 
     write_file
@@ -33,17 +32,16 @@ pub fn start(duration_min: u32, config: &Config) {
 
     thread::sleep(timer_duration);
 
-    if Path::new(&config.time_entry_path).exists() {
-        let time_entry_unix_epoch = fs::read_to_string(&config.time_entry_path)
+    if Path::new(time_entry_path).exists() {
+        let time_entry_unix_epoch = fs::read_to_string(time_entry_path)
             .unwrap()
             .parse::<u64>()
             .unwrap();
 
         if time_entry_unix_epoch == end_time_unix_epoch {
-            Command::new(&config.finished_path).output().unwrap();
-
+            Command::new(finished_script_path).output().unwrap();
             // We don't care if it fails, because then it has been removed.
-            fs::remove_file(&config.time_entry_path).ok();
+            fs::remove_file(time_entry_path).ok();
         }
     }
 }

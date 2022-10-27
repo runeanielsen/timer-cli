@@ -1,10 +1,8 @@
 #![warn(clippy::all, clippy::pedantic)]
 
-use crate::config::Config;
-use std::env;
+use std::{env, path::PathBuf};
 
 mod cancel;
-mod config;
 mod daemon;
 mod parse;
 mod start;
@@ -19,22 +17,27 @@ fn main() {
         return;
     }
 
-    // We allow deprecated since this application is only meant to work on Unix systems,
-    // and most libraries dealing with finding home_dir path
-    // uses this function underneath anyway.
-    #[allow(deprecated)]
-    let config = Config::new(env::home_dir().unwrap());
+    let parsed_args =
+        parse::start_arguments(&args.iter().map(<_>::as_ref).collect::<Vec<_>>()[2..]);
+
+    let time_entry_path: PathBuf = [env::temp_dir(), PathBuf::from("time_entry")]
+        .iter()
+        .collect();
 
     let subcommand = args[1].to_lowercase();
     if subcommand == "start" {
-        let start_args =
-            parse::start_arguments(&args.iter().map(<_>::as_ref).collect::<Vec<_>>()[2..]);
-
-        start::start(start_args.duration_min, &config);
+        match &parsed_args.finished_script {
+            Some(fs) => {
+                start::start(parsed_args.duration_min, &time_entry_path, &fs);
+            }
+            None => {
+                eprintln!("-f parameter is required when using 'start' subcommand.");
+            }
+        }
     } else if subcommand == "cancel" {
-        cancel::cancel(&config);
+        cancel::cancel(&time_entry_path);
     } else if subcommand == "status" {
-        status::status(&config);
+        status::status(&time_entry_path);
     } else {
         eprintln!("Could not handle subcommand: '{}'.", subcommand);
     }
