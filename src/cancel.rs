@@ -7,6 +7,6 @@ pub fn cancel(config: &Config) {
         fs::remove_file(&config.time_entry_path).unwrap();
         println!("Timer has now been canceled.");
     } else {
-        println!("Cannot cancel, no running timer.");
+        eprintln!("Cannot cancel, no running timer.");
     }
 }

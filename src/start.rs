@@ -9,7 +9,7 @@ use std::{fs, thread};
 
 pub fn start(duration_min: u32, config: &Config) {
     if Path::new(&config.time_entry_path).exists() {
-        println!("Could not start timer, timer is already running.");
+        eprintln!("Could not start timer, timer is already running.");
         return;
     }
 

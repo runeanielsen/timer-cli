@@ -35,5 +35,7 @@ fn main() {
         cancel::cancel(&config);
     } else if subcommand == "status" {
         status::status(&config);
+    } else {
+        eprintln!("Could not handle subcommand: '{}'.", subcommand);
     }
 }
