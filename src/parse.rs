@@ -17,7 +17,7 @@ pub fn start_arguments(arguments: &[&str]) -> CommandArguments {
         None => 25,
     };
 
-    let finished_script = hm.get("-f").map(|f| PathBuf::from(f));
+    let finished_script = hm.get("-f").map(PathBuf::from);
 
     CommandArguments {
         duration_min,
