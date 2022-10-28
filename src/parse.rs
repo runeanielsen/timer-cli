@@ -17,10 +17,7 @@ pub fn start_arguments(arguments: &[&str]) -> CommandArguments {
         None => 25,
     };
 
-    let finished_script: Option<PathBuf> = match hm.get("-f") {
-        Some(f) => Some(PathBuf::from(f.clone())),
-        None => None,
-    };
+    let finished_script = hm.get("-f").map(|f| PathBuf::from(f));
 
     CommandArguments {
         duration_min,
