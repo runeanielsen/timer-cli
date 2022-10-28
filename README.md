@@ -44,7 +44,10 @@ Here is an example of a bash script that writes a notifications and plays a file
 ```bash
 #!/bin/env bash
 
-dunstify "Timer finished." &
+set -o errexit
+set -o pipefail
+
+dunstify "Timer finished."
 ffplay -volume 50 -nodisp -autoexit ~/.config/timer-cli/break_sound.mp3
 ```
 
