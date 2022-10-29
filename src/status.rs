@@ -7,8 +7,10 @@ use std::{
 };
 
 pub fn status(time_entry_path: &PathBuf) {
+    const DEFAULT_DISPLAY_TIME: &str = "00:00";
+
     if !Path::new(time_entry_path).exists() {
-        println!("00:00");
+        println!("{}", DEFAULT_DISPLAY_TIME);
         return;
     }
 
@@ -26,7 +28,7 @@ pub fn status(time_entry_path: &PathBuf) {
         let difference = end_unix_epoch - now_unix_epoch;
         println!("{}", format_status(difference));
     } else {
-        println!("00:00");
+        println!("{}", DEFAULT_DISPLAY_TIME);
     }
 }
 
