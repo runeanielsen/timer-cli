@@ -44,8 +44,8 @@ fn parse_finished_script_argument() {
         ),
     ];
 
-    for assertion in assertions {
-        assert_eq!(start_arguments(&assertion.0), assertion.1);
+    for (param, expected) in assertions {
+        assert_eq!(start_arguments(&param), expected);
     }
 }
 
@@ -82,43 +82,46 @@ fn parse_arguments_with_flag_set() {
         ),
     ];
 
-    for assertion in assertions {
-        let result = start_arguments(&["-d", assertion.0]);
-        assert_eq!(result, assertion.1);
+    for (param, expected) in assertions {
+        let result = start_arguments(&["-d", param]);
+        assert_eq!(result, expected);
     }
 }
 
 #[test]
 fn parse_start_arguments_with_no_duration_value_should_be_default() {
-    assert_eq!(
-        start_arguments(&[]),
-        CommandArguments {
-            duration_min: 25,
-            finished_script: None
-        }
-    );
+    let assertions = vec![
+        (
+            vec![],
+            CommandArguments {
+                duration_min: 25,
+                finished_script: None,
+            },
+        ),
+        (
+            vec!["-d"],
+            CommandArguments {
+                duration_min: 25,
+                finished_script: None,
+            },
+        ),
+        (
+            vec!["25"],
+            CommandArguments {
+                duration_min: 25,
+                finished_script: None,
+            },
+        ),
+        (
+            vec!["25", "-d"],
+            CommandArguments {
+                duration_min: 25,
+                finished_script: None,
+            },
+        ),
+    ];
 
-    assert_eq!(
-        start_arguments(&["-d"]),
-        CommandArguments {
-            duration_min: 25,
-            finished_script: None
-        }
-    );
-
-    assert_eq!(
-        start_arguments(&["25"]),
-        CommandArguments {
-            duration_min: 25,
-            finished_script: None
-        }
-    );
-
-    assert_eq!(
-        start_arguments(&["25", "-d"]),
-        CommandArguments {
-            duration_min: 25,
-            finished_script: None
-        }
-    );
+    for (param, expected) in assertions {
+        assert_eq!(start_arguments(&param), expected);
+    }
 }

@@ -14,6 +14,5 @@ impl UnixEpoch for SystemTime {
 
 #[test]
 fn end_time_unix_epoch_is_bigger_than_default() {
-    let time_entry = SystemTime::now();
-    assert!(time_entry.unix_epoch() > 0);
+    assert!(SystemTime::now().unix_epoch() > 0);
 }

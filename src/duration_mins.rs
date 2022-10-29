@@ -26,8 +26,8 @@ fn duration_should_be_parsed_from_min_to_duration() {
         (222, Duration::from_secs(13320)),
     ];
 
-    for (param, result) in assertions {
-        assert_eq!(Duration::from_mins(param), result);
+    for (param, expected) in assertions {
+        assert_eq!(Duration::from_mins(param), expected);
     }
 }
 
@@ -42,7 +42,7 @@ fn duration_is_converted_to_mins() {
         (Duration::from_mins(111), 111),
     ];
 
-    for (param, result) in assertions {
-        assert_eq!(param.as_mins(), result);
+    for (param, expected) in assertions {
+        assert_eq!(param.as_mins(), expected);
     }
 }

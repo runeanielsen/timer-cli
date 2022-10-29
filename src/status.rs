@@ -47,7 +47,7 @@ fn format_status_is_correct_layout() {
         (1230, "20:30"),
     ];
 
-    for assertion in assertions {
-        assert_eq!(format_status(assertion.0), assertion.1);
+    for (param, expected) in assertions {
+        assert_eq!(format_status(param), expected);
     }
 }
