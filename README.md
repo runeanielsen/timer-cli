@@ -1,6 +1,6 @@
 # Timer CLI
 
-Timer creates a timer that is detached from the shell so it can run in the background and if the shell is closed.
+Creates a timer that is detached from the shell so it can run in the background, if configured it can call a program/script when the timer completes.
 
 ## Platform
 
