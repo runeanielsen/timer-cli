@@ -2,7 +2,7 @@ use std::{collections::HashMap, path::PathBuf};
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct CommandArguments {
-    pub duration_min: u32,
+    pub duration_min: u64,
     pub finished_script: Option<PathBuf>,
 }
 

@@ -1,9 +1,12 @@
 #![warn(clippy::all, clippy::pedantic)]
 
-use std::{env, path::PathBuf};
+use std::{env, path::PathBuf, time::Duration};
+
+use duration_mins::DurationMins;
 
 mod cancel;
 mod daemon;
+mod duration_mins;
 mod parse;
 mod start;
 mod status;
@@ -28,7 +31,11 @@ fn main() {
     if subcommand == "start" {
         match &parsed_args.finished_script {
             Some(fs) => {
-                start::start(parsed_args.duration_min, &time_entry_path, fs);
+                start::start(
+                    Duration::from_mins(parsed_args.duration_min),
+                    &time_entry_path,
+                    fs,
+                );
             }
             None => {
                 eprintln!("-f parameter is required when using 'start' subcommand.");
