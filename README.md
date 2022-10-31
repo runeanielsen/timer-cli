@@ -4,7 +4,7 @@ Creates a timer that is detached from the shell so it can run in the background,
 
 ## Platform
 
-This is not cross-platform, only works on Linux since it depends on `libc` fork to `daemonize` the timer so it can run in the background.
+This is not cross-platform, only works on Linux since it depends on `libc` fork to `daemonize` the timer.
 
 ## Installation
 
@@ -60,6 +60,8 @@ timer status
 ```
 
 ## Timer cancel
+
+Cancels the timer, if it is running.
 
 ```sh
 timer cancel
