@@ -12,12 +12,11 @@ mod start;
 mod status;
 mod unix_epoch;
 
-fn main() {
+fn main() -> Result<(), String> {
     let args = env::args().collect::<Vec<_>>();
 
     if args.len() == 1 {
-        eprintln!("Please provide a subcommand.");
-        return;
+        return Err("Please provide a subcommand.".to_string());
     }
 
     let parsed_args =
@@ -38,7 +37,7 @@ fn main() {
                 );
             }
             None => {
-                eprintln!("-f parameter is required when using 'start' subcommand.");
+                return Err("-f flag is required when using 'start'.".to_string());
             }
         }
     } else if subcommand == "cancel" {
@@ -46,6 +45,8 @@ fn main() {
     } else if subcommand == "status" {
         status::status(&time_entry_path);
     } else {
-        eprintln!("Could not handle subcommand: '{}'.", subcommand);
+        return Err(format!("Could not handle subcommand {}.", subcommand));
     }
+
+    Ok(())
 }
