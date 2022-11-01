@@ -1,6 +1,6 @@
 #![warn(clippy::all, clippy::pedantic)]
 
-use std::{env, path::PathBuf, time::Duration};
+use std::{env, error::Error, path::PathBuf, time::Duration};
 
 use duration_mins::DurationMins;
 
@@ -12,11 +12,11 @@ mod start;
 mod status;
 mod unix_epoch;
 
-fn main() -> Result<(), String> {
+fn main() -> Result<(), Box<dyn Error>> {
     let args = env::args().collect::<Vec<_>>();
 
     if args.len() == 1 {
-        return Err("Please provide a subcommand.".to_string());
+        Err("Please provide a subcommand.")?;
     }
 
     let parsed_args =
@@ -36,16 +36,16 @@ fn main() -> Result<(), String> {
                     fs,
                 );
             }
-            None => {
-                return Err("-f flag is required when using 'start'.".to_string());
-            }
+            None => Err("-f flag is required when using 'start'.".to_string())?,
         }
     } else if subcommand == "cancel" {
-        cancel::cancel(&time_entry_path);
+        if let Err(err) = cancel::cancel(&time_entry_path) {
+            Err(err)?;
+        };
     } else if subcommand == "status" {
-        status::status(&time_entry_path);
+        return status::status(&time_entry_path);
     } else {
-        return Err(format!("Could not handle subcommand {}.", subcommand));
+        Err(format!("Could not handle subcommand {}.", subcommand))?;
     }
 
     Ok(())

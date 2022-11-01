@@ -1,24 +1,21 @@
 use crate::unix_epoch::UnixEpoch;
 
 use std::{
+    error::Error,
     fs,
     path::{Path, PathBuf},
     time::SystemTime,
 };
 
-pub fn status(time_entry_path: &PathBuf) {
+pub fn status(time_entry_path: &PathBuf) -> Result<(), Box<dyn Error>> {
     const DEFAULT_DISPLAY_TIME: &str = "00:00";
 
     if !Path::new(time_entry_path).exists() {
         println!("{}", DEFAULT_DISPLAY_TIME);
-        return;
+        return Ok(());
     }
 
-    let end_unix_epoch: u64 = fs::read_to_string(time_entry_path)
-        .unwrap()
-        .parse()
-        .unwrap();
-
+    let end_unix_epoch: u64 = fs::read_to_string(time_entry_path)?.parse()?;
     let now_unix_epoch = SystemTime::now().unix_epoch();
 
     // After a while has been deleted, it might still have been loaded in memory here
@@ -30,6 +27,8 @@ pub fn status(time_entry_path: &PathBuf) {
     } else {
         println!("{}", DEFAULT_DISPLAY_TIME);
     }
+
+    Ok(())
 }
 
 fn format_status(secs: u64) -> String {
