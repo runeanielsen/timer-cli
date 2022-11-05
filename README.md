@@ -9,7 +9,7 @@ This is not cross-platform, only works on Linux since it depends on `libc` fork 
 ## Installation
 
 ```sh
-cargo build --release && cargo install --path .
+cargo install --path .
 ```
 
 ## Usage
