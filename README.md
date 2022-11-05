@@ -38,7 +38,7 @@ Start timer that executes a program or script when the timer completes.
 timer start -d 10 -f /home/my_user/finished.sh
 ```
 
-Here is an example of a bash script that writes a notifications and plays a file when the timer completes.
+Here is an example of a bash script that writes a notifications and plays a sound when the timer completes.
 
 --- `finished.sh`
 ```bash
