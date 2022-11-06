@@ -38,7 +38,7 @@ Start timer that executes a program or script when the timer completes.
 timer start -d 10 -f /home/my_user/finished.sh
 ```
 
-Here is an example of a bash script that writes a notifications and plays a sound when the timer completes.
+Example of a bash script that shows a notification and plays a sound when the timer completes.
 
 --- `finished.sh`
 ```bash
@@ -53,7 +53,7 @@ ffplay -volume 50 -nodisp -autoexit ~/.config/timer-cli/break_sound.mp3
 
 ## Timer status
 
-Timer status outputs duration left before the timer completes, example `09:52`.
+Timer status writes the remaining time before the timer completes, an example is `09:52`.
 
 ```sh
 timer status 
