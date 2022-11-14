@@ -36,9 +36,9 @@ pub fn start(duration: Duration, time_entry_path: &PathBuf, finished_path: &Path
     thread::sleep(duration);
 
     if Path::new(time_entry_path).exists() {
-        let time_entry_unix_epoch = fs::read_to_string(time_entry_path)
+        let time_entry_unix_epoch: u64 = fs::read_to_string(time_entry_path)
             .unwrap()
-            .parse::<u64>()
+            .parse()
             .unwrap();
 
         if time_entry_unix_epoch == end_time_unix_epoch {
