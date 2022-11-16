@@ -1,10 +1,10 @@
 # Timer CLI
 
-Creates a timer that is detached from the shell so it can run in the background, if configured it can call a program/script when the timer completes.
+Creates a timer that is detached from the shell so it can run in the background. The daemonization of the process makes it easy to integrate it into external programs such as status-bars. If configured it can call a program/script when the timer completes.
 
 ## Platform
 
-This is not cross-platform, only works on Linux since it depends on `libc` fork to `daemonize` the timer.
+This is not cross-platform, only works on Linux since it depends on the `fork` function from `libc` to `daemonize` the timer.
 
 ## Installation
 
