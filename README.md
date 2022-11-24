@@ -1,6 +1,6 @@
 # Timer CLI
 
-Creates a timer that is detached from the shell so it can run in the background. The daemonization of the process makes it easy to integrate it into external programs such as status-bars. If configured it can call a program/script when the timer completes.
+Creates a timer that is detached from the shell so it can run in the background. The daemonization of the process makes it easy to integrate it into external programs such as status-bars. If configured, it can execute a program/script when the timer completes.
 
 ## Platform
 
