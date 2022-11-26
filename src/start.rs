@@ -15,14 +15,12 @@ pub fn start(duration: Duration, time_entry_path: &PathBuf, finished_path: &Path
 
     let end_time_unix_epoch = SystemTime::now().unix_epoch() + duration.as_secs();
 
-    let mut write_file = fs::OpenOptions::new()
+    fs::OpenOptions::new()
         .create(true)
         .write(true)
         .truncate(true)
         .open(time_entry_path)
-        .unwrap();
-
-    write_file
+        .unwrap()
         .write_all(end_time_unix_epoch.to_string().as_bytes())
         .unwrap();
 
