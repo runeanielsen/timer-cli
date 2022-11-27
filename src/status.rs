@@ -8,25 +8,23 @@ use std::{
 };
 
 pub fn status(time_entry_path: &PathBuf) -> Result<(), Box<dyn Error>> {
-    const DEFAULT_DISPLAY_TIME: &str = "00:00";
+    let unix_epoch_left = if Path::new(time_entry_path).exists() {
+        let end_unix_epoch: u64 = fs::read_to_string(time_entry_path)?.parse()?;
+        let now_unix_epoch = SystemTime::now().unix_epoch();
 
-    if !Path::new(time_entry_path).exists() {
-        println!("{}", DEFAULT_DISPLAY_TIME);
-        return Ok(());
-    }
-
-    let end_unix_epoch: u64 = fs::read_to_string(time_entry_path)?.parse()?;
-    let now_unix_epoch = SystemTime::now().unix_epoch();
-
-    // After a while has been deleted, it might still have been loaded in memory here
-    // to avoid values being displayed is invalid, we make sure that the 'end_unix_epoch'
-    // is greater than the 'now_unix_epoch' that way we only display valid values.
-    if end_unix_epoch > now_unix_epoch {
-        let difference = end_unix_epoch - now_unix_epoch;
-        println!("{}", format_status(difference));
+        // It might take a bit before the file is deleted on disk,
+        // to avoid negative time being displayed, we make sure that
+        // the end time is greater than the current time.
+        if end_unix_epoch > now_unix_epoch {
+            end_unix_epoch - now_unix_epoch
+        } else {
+            0
+        }
     } else {
-        println!("{}", DEFAULT_DISPLAY_TIME);
-    }
+        0
+    };
+
+    println!("{}", format_status(unix_epoch_left));
 
     Ok(())
 }
