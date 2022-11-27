@@ -34,7 +34,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                     Duration::from_mins(parsed_args.duration_min),
                     &time_entry_path,
                     fs,
-                );
+                )?;
             }
             None => Err("-f flag is required when using 'start'.".to_string())?,
         }

@@ -1,16 +1,20 @@
 use crate::daemon::daemonize;
 use crate::duration_mins::DurationMins;
 use crate::unix_epoch::UnixEpoch;
+use std::error::Error;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::{Duration, SystemTime};
 use std::{fs, thread};
 
-pub fn start(duration: Duration, time_entry_path: &PathBuf, finished_path: &PathBuf) {
+pub fn start(
+    duration: Duration,
+    time_entry_path: &PathBuf,
+    finished_path: &PathBuf,
+) -> Result<(), Box<dyn Error>> {
     if Path::new(time_entry_path).exists() {
-        eprintln!("Could not start timer, timer is already running.");
-        return;
+        Err("Could not start timer, another timer is already running.")?;
     }
 
     let end_time_unix_epoch = SystemTime::now().unix_epoch() + duration.as_secs();
@@ -19,30 +23,27 @@ pub fn start(duration: Duration, time_entry_path: &PathBuf, finished_path: &Path
         .create(true)
         .write(true)
         .truncate(true)
-        .open(time_entry_path)
-        .unwrap()
-        .write_all(end_time_unix_epoch.to_string().as_bytes())
-        .unwrap();
+        .open(time_entry_path)?
+        .write_all(end_time_unix_epoch.to_string().as_bytes())?;
 
     println!(
         "Starting timer, the duration is: {} min(s).",
         duration.as_mins()
     );
 
-    daemonize().unwrap();
+    daemonize()?;
 
     thread::sleep(duration);
 
     if Path::new(time_entry_path).exists() {
-        let time_entry_unix_epoch: u64 = fs::read_to_string(time_entry_path)
-            .unwrap()
-            .parse()
-            .unwrap();
+        let time_entry_unix_epoch: u64 = fs::read_to_string(time_entry_path)?.parse()?;
 
         if time_entry_unix_epoch == end_time_unix_epoch {
-            Command::new(finished_path).output().unwrap();
+            Command::new(finished_path).output()?;
             // We don't care if it fails, because then it has been removed.
             fs::remove_file(time_entry_path).ok();
         }
     }
+
+    Ok(())
 }
