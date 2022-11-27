@@ -12,7 +12,12 @@ impl UnixEpoch for SystemTime {
     }
 }
 
-#[test]
-fn end_time_unix_epoch_is_bigger_than_default() {
-    assert!(SystemTime::now().unix_epoch() > 0);
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn end_time_unix_epoch_is_bigger_than_default() {
+        assert!(SystemTime::now().unix_epoch() > 0);
+    }
 }

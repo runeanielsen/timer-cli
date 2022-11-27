@@ -40,59 +40,64 @@ fn format_status(secs: u64) -> String {
     format!("{:0>2}:{:0>2}", secs / 60, secs % 60)
 }
 
-#[test]
-fn calculate_correct_epoch_difference() {
-    assert_eq!(unix_epoch_difference(1_669_560_091, 1_669_560_091), Some(0));
-    assert_eq!(
-        unix_epoch_difference(1_669_560_091, 1_669_560_091 + 10),
-        Some(10)
-    );
-    assert_eq!(
-        unix_epoch_difference(1_669_560_091, 1_669_560_091 + 50),
-        Some(50)
-    );
-    assert_eq!(
-        unix_epoch_difference(1_669_560_091, 1_669_560_091 + 121),
-        Some(121)
-    );
-    assert_eq!(
-        unix_epoch_difference(1_669_560_091, 1_669_560_091 + 9999),
-        Some(9999)
-    );
-}
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-#[test]
-fn epoch_difference_should_be_none_when_end_is_greater_than_start() {
-    assert_eq!(
-        unix_epoch_difference(1_669_560_091 + 100, 1_669_560_091),
-        None
-    );
-    assert_eq!(
-        unix_epoch_difference(1_669_560_091 + 10, 1_669_560_091),
-        None
-    );
-    assert_eq!(
-        unix_epoch_difference(1_669_560_091 + 1, 1_669_560_091),
-        None
-    );
-    assert_eq!(
-        unix_epoch_difference(1_669_560_091 + 999_999, 1_669_560_091),
-        None
-    );
-}
+    #[test]
+    fn calculate_correct_epoch_difference() {
+        assert_eq!(unix_epoch_difference(1_669_560_091, 1_669_560_091), Some(0));
+        assert_eq!(
+            unix_epoch_difference(1_669_560_091, 1_669_560_091 + 10),
+            Some(10)
+        );
+        assert_eq!(
+            unix_epoch_difference(1_669_560_091, 1_669_560_091 + 50),
+            Some(50)
+        );
+        assert_eq!(
+            unix_epoch_difference(1_669_560_091, 1_669_560_091 + 121),
+            Some(121)
+        );
+        assert_eq!(
+            unix_epoch_difference(1_669_560_091, 1_669_560_091 + 9999),
+            Some(9999)
+        );
+    }
 
-#[test]
-fn format_status_is_correct_layout() {
-    let assertions = vec![
-        (0, "00:00"),
-        (30, "00:30"),
-        (120, "02:00"),
-        (130, "02:10"),
-        (1200, "20:00"),
-        (1230, "20:30"),
-    ];
+    #[test]
+    fn epoch_difference_should_be_none_when_end_is_greater_than_start() {
+        assert_eq!(
+            unix_epoch_difference(1_669_560_091 + 100, 1_669_560_091),
+            None
+        );
+        assert_eq!(
+            unix_epoch_difference(1_669_560_091 + 10, 1_669_560_091),
+            None
+        );
+        assert_eq!(
+            unix_epoch_difference(1_669_560_091 + 1, 1_669_560_091),
+            None
+        );
+        assert_eq!(
+            unix_epoch_difference(1_669_560_091 + 999_999, 1_669_560_091),
+            None
+        );
+    }
 
-    for (param, expected) in assertions {
-        assert_eq!(format_status(param), expected);
+    #[test]
+    fn format_status_is_correct_layout() {
+        let assertions = vec![
+            (0, "00:00"),
+            (30, "00:30"),
+            (120, "02:00"),
+            (130, "02:10"),
+            (1200, "20:00"),
+            (1230, "20:30"),
+        ];
+
+        for (param, expected) in assertions {
+            assert_eq!(format_status(param), expected);
+        }
     }
 }
