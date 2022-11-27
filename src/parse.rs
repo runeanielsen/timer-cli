@@ -12,16 +12,12 @@ pub fn start_arguments(arguments: &[&str]) -> CommandArguments {
         hm.insert(x[0].to_string(), x[1].to_string());
     });
 
-    let duration_min = match hm.get("-d") {
-        Some(d) => d.parse().unwrap_or(25),
-        None => 25,
-    };
-
-    let finished_script = hm.get("-f").map(PathBuf::from);
-
     CommandArguments {
-        duration_min,
-        finished_script,
+        duration_min: match hm.get("-d") {
+            Some(d) => d.parse().unwrap_or(25),
+            None => 25,
+        },
+        finished_script: hm.get("-f").map(PathBuf::from),
     }
 }
 
