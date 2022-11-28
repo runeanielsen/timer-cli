@@ -39,11 +39,9 @@ fn main() -> Result<(), Box<dyn Error>> {
             None => Err("-f flag is required when using 'start'.".to_string())?,
         }
     } else if subcommand == "cancel" {
-        if let Err(err) = cancel::cancel(&time_entry_path) {
-            Err(err)?;
-        };
+        cancel::cancel(&time_entry_path)?;
     } else if subcommand == "status" {
-        return status::status(&time_entry_path);
+        status::status(&time_entry_path)?;
     } else {
         Err(format!("Could not handle subcommand {}.", subcommand))?;
     }
