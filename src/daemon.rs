@@ -1,23 +1,34 @@
+use std::env::set_current_dir;
+
+use libc::{close, fork, setsid, umask, STDERR_FILENO, STDIN_FILENO, STDOUT_FILENO};
+
 unsafe fn _daemonize() -> Result<(), &'static str> {
-    match libc::fork() {
+    match fork() {
         -1 => return Err("Fork failed."),
+        // The child process becomes the daemon, and can now continue running as normal.
         0 => {}
+        // The parent process can now exit, as the daemon will continue running in the child process.
         _ => libc::_exit(0),
     };
 
-    libc::umask(0);
+    // We want to use the system-wide default file-mode for the daemon.
+    umask(0);
 
-    if libc::setsid() < 0 {
+    // Create a new session for the daemon,
+    // if the value returned is less than 0, the session could not be created.
+    if setsid() < 0 {
         return Err("Could not set sid.");
     }
 
-    if std::env::set_current_dir("/").is_err() {
+    // The daemon does not require a specific.
+    if set_current_dir("/").is_err() {
         return Err("Could not set current directory.");
     };
 
-    libc::close(libc::STDIN_FILENO);
-    libc::close(libc::STDOUT_FILENO);
-    libc::close(libc::STDERR_FILENO);
+    // The daemon should no longer communicate via 'STD'.
+    close(STDIN_FILENO);
+    close(STDOUT_FILENO);
+    close(STDERR_FILENO);
 
     Ok(())
 }
