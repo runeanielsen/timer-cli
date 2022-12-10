@@ -7,7 +7,7 @@ unsafe fn _daemonize() -> Result<(), &'static str> {
         -1 => return Err("Fork failed."),
         // The child process becomes the daemon, and can now continue running as normal.
         0 => {}
-        // The parent process can now exit, as the daemon will continue running in the child process.
+        // The parent process can exit, as the daemon will continue running in the child process.
         _ => libc::_exit(0),
     };
 
