@@ -89,7 +89,7 @@ mod tests {
     }
 
     #[test]
-    fn parse_start_arguments_with_no_duration_value_should_be_default() {
+    fn parse_start_arguments_with_no_duration_value_sets_default() {
         let assertions = [
             (
                 vec![],
