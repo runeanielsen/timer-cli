@@ -87,7 +87,7 @@ mod tests {
 
     #[test]
     fn format_status_is_correct_layout() {
-        let assertions = vec![
+        let assertions = [
             (0, "00:00"),
             (30, "00:30"),
             (120, "02:00"),

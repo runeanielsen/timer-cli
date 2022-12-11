@@ -21,7 +21,7 @@ mod tests {
 
     #[test]
     fn duration_should_be_parsed_from_min_to_duration() {
-        let assertions = vec![
+        let assertions = [
             (0, Duration::from_secs(0)),
             (25, Duration::from_secs(1500)),
             (40, Duration::from_secs(2400)),
@@ -37,7 +37,7 @@ mod tests {
 
     #[test]
     fn duration_is_converted_to_mins() {
-        let assertions = vec![
+        let assertions = [
             (Duration::from_mins(0), 0),
             (Duration::from_mins(1), 1),
             (Duration::from_mins(9), 9),

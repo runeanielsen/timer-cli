@@ -27,7 +27,7 @@ mod tests {
 
     #[test]
     fn parse_finished_script_argument() {
-        let assertions = vec![
+        let assertions = [
             (
                 ["-f", "/home/my_awesome_finish_script"],
                 CommandArguments {
@@ -51,7 +51,7 @@ mod tests {
 
     #[test]
     fn parse_arguments_with_flag_set() {
-        let assertions = vec![
+        let assertions = [
             (
                 "5",
                 CommandArguments {
@@ -90,7 +90,7 @@ mod tests {
 
     #[test]
     fn parse_start_arguments_with_no_duration_value_should_be_default() {
-        let assertions = vec![
+        let assertions = [
             (
                 vec![],
                 CommandArguments {
