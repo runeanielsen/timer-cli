@@ -7,10 +7,10 @@ pub struct CommandArguments {
 }
 
 pub fn start_arguments(arguments: &[&str]) -> CommandArguments {
-    let mut hm: HashMap<String, String> = HashMap::new();
-    arguments.chunks_exact(2).for_each(|x| {
-        hm.insert(x[0].to_string(), x[1].to_string());
-    });
+    let hm: HashMap<String, String> = arguments
+        .chunks_exact(2)
+        .map(|x| (x[0].to_string(), x[1].to_string()))
+        .collect();
 
     CommandArguments {
         duration_min: match hm.get("-d") {
