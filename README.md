@@ -40,12 +40,11 @@ timer start -d 10 -f /home/my_user/finished.sh
 
 Example of a bash script that shows a notification and plays a sound when the timer completes.
 
---- `finished.sh`
+`finished.sh`
 ```bash
-#!/bin/env bash
+#!/usr/bin/env bash
 
-set -o errexit
-set -o pipefail
+set -o errexit -o nounset -o pipefail
 
 dunstify "Timer finished."
 ffplay -volume 50 -nodisp -autoexit ~/.config/timer-cli/break_sound.mp3
