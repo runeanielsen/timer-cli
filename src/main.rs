@@ -43,7 +43,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     } else if subcommand == "status" {
         status::status(&time_entry_path)?;
     } else {
-        Err(format!("Could not handle subcommand {}.", subcommand))?;
+        Err(format!("Could not handle subcommand {subcommand}."))?;
     }
 
     Ok(())
