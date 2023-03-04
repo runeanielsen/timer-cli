@@ -22,7 +22,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let parsed_args =
         parse::start_arguments(&args.iter().map(<_>::as_ref).collect::<Vec<_>>()[2..]);
 
-    let time_entry_path: PathBuf = [env::temp_dir(), PathBuf::from("time_entry")]
+    let time_entry_path = [env::temp_dir(), PathBuf::from("time_entry")]
         .iter()
         .collect();
 
