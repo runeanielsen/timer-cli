@@ -16,7 +16,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let args = env::args().collect::<Vec<_>>();
 
     if args.len() == 1 {
-        Err("Please provide a subcommand.")?;
+        Err("Please provide a subcommand. Examples: 'start', 'cancel' and 'status'")?;
     }
 
     let parsed_args =
