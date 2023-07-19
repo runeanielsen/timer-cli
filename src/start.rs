@@ -40,8 +40,21 @@ pub fn start(
 
         if time_entry_unix_epoch == end_time_unix_epoch {
             Command::new(finished_path).output()?;
-            // We don't care if it fails, because then it has been removed.
-            fs::remove_file(time_entry_path).ok();
+            // If the
+            match fs::remove_file(time_entry_path) {
+                Ok(()) => Ok(()),
+                Err(error) => {
+                    match error.kind() {
+                        // Do not care if it is not found, it could have been deleted
+                        // by the default itself, and won't result in the program
+                        // behaving in a bad way.
+                        std::io::ErrorKind::NotFound => Ok(()),
+                        // This could be permission denied or delete operation interruped.
+                        // There is no simple way to handle this.
+                        _ => Err(error)
+                    }
+                }
+            }?
         }
     }
 
