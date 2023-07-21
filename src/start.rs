@@ -51,7 +51,7 @@ pub fn start(
                         std::io::ErrorKind::NotFound => Ok(()),
                         // This could be permission denied or delete operation interruped.
                         // There is no simple way to handle this.
-                        _ => Err(error)
+                        _ => Err(error),
                     }
                 }
             }?
